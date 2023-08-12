@@ -11,5 +11,6 @@ namespace KPAS_Automation.Infrastructure.Config
         public static float Timeout => TestConfigurator.GetSettingsInt(Constants.Timeout);
 
         public static BrowserConfig BrowserConfig = TestConfigurator.GetSection(Constants.BrowserConfigSection);
+        public static string OracleDBConnectionString => TestConfigurator.GetSettingString(Constants.BaseUrl);
     }
 }

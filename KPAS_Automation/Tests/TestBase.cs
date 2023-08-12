@@ -7,6 +7,7 @@ namespace KPAS_Automation.Tests
     public class TestBase
     {
         protected IWebDriver Driver;
+        protected OracleUtility DbUtility { get; private set; }
         protected string BaseUrl;
 
         [OneTimeSetUp]
@@ -20,6 +21,7 @@ namespace KPAS_Automation.Tests
         {
             DriverInitializer driverManager = new DriverInitializer();
             Driver = driverManager.InitializeDriver();
+            DbUtility = new OracleUtility();
             BaseUrl = TestConfigReader.BaseUrl;
             Driver.Manage().Window.Maximize();
         }
@@ -28,6 +30,7 @@ namespace KPAS_Automation.Tests
         public void TearDown()
         {
             Driver.Quit();
+            DbUtility.Dispose();
         }
     }
 }
