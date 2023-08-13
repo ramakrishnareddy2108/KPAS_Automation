@@ -32,12 +32,15 @@ namespace KPAS_Automation.Tests
 
             var htmlReporter = new ExtentHtmlReporter(Paths.HtmlReport);
             _extent.AttachReporter(htmlReporter);
+
+
             _ = TestConfigurator.LoadConfiguration;
         }
 
         [SetUp]
         public void SetUp()
         {
+            _test = _extent.CreateTest(TestContext.CurrentContext.Test.Name);
             DriverInitializer driverManager = new DriverInitializer();
             Driver = driverManager.InitializeDriver();
             DbUtility = new OracleUtility();
@@ -52,15 +55,16 @@ namespace KPAS_Automation.Tests
 
             if (status == NUnit.Framework.Interfaces.TestStatus.Failed)
             {
-                // Modify this to capture and save the actual screenshot
                 string screenshotPath = Path.Combine(Paths.ScreenshotsPath, $"screenshot_{DateTime.Now:yyyyMMdd_HHmmss}.png");
+
+                // Capture the screenshot
+                Screenshot screenshot = ((ITakesScreenshot)Driver).GetScreenshot();
+                screenshot.SaveAsFile(screenshotPath, ScreenshotImageFormat.Png);
+
                 _test.Fail("Screenshot", MediaEntityBuilder.CreateScreenCaptureFromPath(screenshotPath).Build());
                 _test.Fail(TestContext.CurrentContext.Result.Message);
             }
-            else if (status == NUnit.Framework.Interfaces.TestStatus.Passed)
-            {
-                _test.Pass("Test passed");
-            }
+
 
             _extent.Flush();
             Driver.Quit();
